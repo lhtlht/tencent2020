@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score,roc_auc_score,f1_score,recall_score
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -26,8 +27,7 @@ if __name__ == '__main__':
         user_train, user_test = user, test
         user_train = user_train.merge(train, how='left', on='user_id')
 
-
-
+    accuracy_score()
 
 
     print(user_train.head())
