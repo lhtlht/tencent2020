@@ -11,7 +11,6 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
-
 from sklearn.metrics import accuracy_score,roc_auc_score,f1_score,recall_score
 from gensim import models
 from scipy import sparse
@@ -24,6 +23,7 @@ path_save = "../../data/tencent2020/save/"
 pickle_path = "../../data/tencent2020/pickle/"
 sub_path = "../../data/tencent2020/sub/"
 model_path = "../../data/tencent2020/model/"
+embed_path = "../../data/tencent2020/embed/"
 
 train_preliminary_p = path_build + "train_preliminary/"
 
@@ -44,6 +44,35 @@ def multi_column_LabelEncoder(df,columns,rename=True):
             df.rename(columns={column+"_index":column}, inplace=True)
     print('LabelEncoder Successfully!')
     return df
+
+
+def search_weight(valid_y, raw_prob, init_weight=[1.0]*10,class_num=10, step=0.001):
+    weight = init_weight.copy()
+    f_best = accuracy_score(y_true=valid_y, y_pred=raw_prob.argmax(
+        axis=1))
+    flag_score = 0
+    round_num = 1
+    while(flag_score != f_best):
+        print("round: ", round_num)
+        round_num += 1
+        flag_score = f_best
+        for c in range(class_num):
+            for n_w in range(0, 2000,10):
+                num = n_w * step
+                new_weight = weight.copy()
+                new_weight[c] = num
+
+                prob_df = raw_prob.copy()
+                prob_df = prob_df * np.array(new_weight)
+
+                f = accuracy_score(y_true=valid_y, y_pred=prob_df.argmax(
+                    axis=1))
+                if f > f_best:
+                    weight = new_weight.copy()
+                    f_best = f
+                    print(f)
+    return weight
+
 
 def reduce_mem_usage(df, verbose=True):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
@@ -91,3 +120,5 @@ def load_pickle(path):
 def get_array_label(label_prob, con=0):
     pre = label_prob.argmax(axis=1) + con
     return pre
+
+
