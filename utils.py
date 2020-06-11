@@ -36,12 +36,25 @@ def multi_column_LabelEncoder(df,columns,rename=True):
     from sklearn.preprocessing import LabelEncoder
     le = LabelEncoder()
     for column in columns:
-        #print(column,"LabelEncoder......")
+        print(column,"LabelEncoder......")
         le.fit(df[column])
         df[column+"_index"] = le.transform(df[column]) + 1
         if rename:
             df.drop([column], axis=1, inplace=True)
             df.rename(columns={column+"_index":column}, inplace=True)
+    print('LabelEncoder Successfully!')
+    return df
+
+def multi_column_LabelEncoderOrder(df,columns,rename=True, max_features=None):
+    for column in columns:
+        print(column,"LabelEncoderOrder......")
+        feaValueCounts = df[column].value_counts()
+        df[column+"_index"] = df[column].map( dict(zip( feaValueCounts.index, range(1,len(feaValueCounts)+1)  )) )
+        if rename:
+            df.drop([column], axis=1, inplace=True)
+            df.rename(columns={column+"_index":column}, inplace=True)
+        if max_features:
+            df.loc[df[column]>max_features, column] = max_features
     print('LabelEncoder Successfully!')
     return df
 

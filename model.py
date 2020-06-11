@@ -40,17 +40,7 @@ lgb_params = {
 
 }
 
-def multi_column_LabelEncoder(df,columns,rename=True):
-    le = LabelEncoder()
-    for column in columns:
-        #print(column,"LabelEncoder......")
-        le.fit(df[column])
-        df[column+"_index"] = le.transform(df[column])
-        if rename:
-            df.drop([column], axis=1, inplace=True)
-            df.rename(columns={column+"_index":column}, inplace=True)
-    print('LabelEncoder Successfully!')
-    return df
+
 
 
 def reg_model(train, test, label_name, model_type, numerical_features, category_features, seed, cv=True):
@@ -317,24 +307,3 @@ def class_model(train, test, features_map, model_type='lgb', class_num=2, cv=Tru
         oof = train_pred_proba
 
     return oof,result
-
-
-class LSTModel2(keras.Model):
-    def __init__(self, units, num_classes, voc_size, emb_size, emb_mat, max_len):
-        super(LSTModel2, self).__init__()
-        self.units = units
-        self.embedding = keras.layers.Embedding(voc_size, emb_size, input_length=max_len, trainable=False, weights=[emb_mat])
-        self.lstm = keras.layers.Bidirectional(keras.layers.LSTM(self.units))
-        self.dense1 = keras.layers.Dense(self.units, activation='relu')
-        self.dense2 = keras.layers.Dense(num_classes, activation='softmax')
-
-    def call(self, x, training=None, mask=None):
-        # x1 = self.embedding(x['a'])
-        # x2 = self.embedding(x['b'])
-        # e = tf.concat([x1,x2],1)
-        # x = self.lstm(e)
-        x = self.embedding(x)
-        x = self.lstm(x)
-        x = self.dense1(x)
-        x = self.dense2(x)
-        return x
