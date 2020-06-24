@@ -58,6 +58,12 @@ def multi_column_LabelEncoderOrder(df,columns,rename=True, max_features=None):
     print('LabelEncoder Successfully!')
     return df
 
+def view_dfna(df):
+    columns = df.columns
+    percent_missing = df.isnull().sum() * 100 / len(df)
+    missing_value_df = pd.DataFrame({'column_name': columns,
+                                     'percent_missing': percent_missing})
+    return missing_value_df
 
 def search_weight(valid_y, raw_prob, init_weight=[1.0]*10,class_num=10, step=0.001):
     weight = init_weight.copy()
