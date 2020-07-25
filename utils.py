@@ -18,14 +18,7 @@ from scipy.sparse import csr_matrix, coo_matrix
 
 from collections import defaultdict
 from collections import Counter
-path_build = "../../data/tencent2020/build/"
-path_save = "../../data/tencent2020/save/"
-pickle_path = "../../data/tencent2020/pickle/"
-sub_path = "../../data/tencent2020/sub/"
-model_path = "../../data/tencent2020/model/"
-embed_path = "../../data/tencent2020/embed/"
 
-train_preliminary_p = path_build + "train_preliminary/"
 
 # if not os.path.exists(pickle_path):
 #     os.mkdir(pickle_path)
